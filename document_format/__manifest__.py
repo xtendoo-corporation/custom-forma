@@ -14,7 +14,8 @@
         Modulo para editar el formato base de los documentos
         """,
     "data": [
-        "views/invoice_document.xml"
+        "views/invoice/invoice_document.xml",
+        "views/layout/layout_inherit.xml",
     ],
 
     "installable": True,

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="external_layout_standard_inherit" inherit_id="web.external_layout_standard">
+
+            <xpath expr="//div[contains(@class,'header')]/div[1]" position="before">
+                <div class="w-100 text-start mb-2">
+                    <h2 t-out="layout_document_title" class="m-0"/>
+                </div>
+            </xpath>
+
+            <xpath expr="//div[contains(@class,'d-flex justify-content-between align-items-center')]/img"
+                   position="after">
+                <div class="ms-3 d-inline-block" name="company_address_header">
+                    <t t-if="company.is_company_details_empty">
+                        <span t-field="company.partner_id"
+                              t-options='{"widget":"contact","fields":["address","name"],"no_marker": true}'/>
+                    </t>
+                    <t t-else="">
+                        <span t-field="company.company_details"/>
+                    </t>
+                </div>
+            </xpath>
+
+            <xpath expr="//div[contains(@class,'article')]//h2[@t-out='layout_document_title']" position="replace">
+                <t/>
+            </xpath>
+
+            <xpath expr="//div[@class='row']/div[@name='company_address']" position="replace">
+                <div name="company_address"/>
+            </xpath>
+
+        </template>
+    </data>
+</odoo>
