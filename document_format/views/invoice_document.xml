@@ -3,12 +3,46 @@
     <data>
         <!-- Hereda la plantilla base de factura de Odoo 19 y añade un pequeño bloque identificador -->
         <template id="report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+
             <xpath expr="//div[@name='due_date']" position="replace">
                 <div class="col" name="payment_method">
                     <strong>Forma de pago</strong>
                     <div t-field="o.preferred_payment_method_line_id"/>
                 </div>
             </xpath>
+
+            <xpath expr="//p[@name='payment_communication']" position="replace">
+                <p name="payment_communication">
+                    Concepto de pago:
+                    <span class="fw-bold" t-field="o.payment_reference"/>
+
+                    <t t-if="o.company_id.partner_id.bank_ids">
+                        <br/>
+                        <div class="d-flex">
+                            <span class="me-2" style="white-space: nowrap;">En esta Cuenta(s):</span>
+
+                            <div>
+                                <t t-foreach="o.company_id.partner_id.bank_ids" t-as="bank">
+                                    <div class="fw-bold">
+                                        <t t-esc="bank.acc_number"/>
+                                        -
+                                        <t t-esc="bank.bank_id.name"/>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+
+                    <t t-else="">
+                        <t t-if="o.partner_bank_id">
+                            <br/>
+                            En esta cuenta:
+                            <span t-field="o.partner_bank_id" class="fw-bold"/>
+                        </t>
+                    </t>
+                </p>
+            </xpath>
+
         </template>
     </data>
 </odoo>
