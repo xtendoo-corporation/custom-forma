@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Hereda la plantilla base de factura de Odoo 19 y añade un pequeño bloque identificador -->
+        <template id="report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+            <xpath expr="//div[@name='due_date']" position="replace">
+                <div class="col" name="payment_method">
+                    <strong>Forma de pago</strong>
+                    <div t-field="o.preferred_payment_method_line_id"/>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>
