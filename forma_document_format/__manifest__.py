@@ -1,7 +1,7 @@
 {
-    "name": "Document format forma",
+    "name": "Forma Document Format",
     "category": "Report",
-    "version": "19.0.1.0.4",
+    "version": "19.0.1.0.6",
     'author': 'Guillermo Bárcena López',
     'website': 'https://www.xtendoo.es',
     "depends": [
@@ -11,7 +11,7 @@
     "license": "AGPL-3",
     "application": True,
     "description": """
-        Modulo para editar el formato base de los documentos
+        Módulo para editar el formato base de los documentos
         """,
     "data": [
         "views/invoice/invoice_document.xml",

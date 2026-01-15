@@ -5,9 +5,9 @@
         <template id="report_invoice_document_inherit" inherit_id="account.report_invoice_document">
 
             <xpath expr="//div[@name='due_date']" position="replace">
-                <div class="col" name="payment_method">
+                <div class="col" name="payment_method" t-if="o.payment_mode_id">
                     <strong>Forma de pago</strong>
-                    <div t-field="o.preferred_payment_method_line_id"/>
+                    <div t-field="o.payment_mode_id"/>
                 </div>
             </xpath>
 
