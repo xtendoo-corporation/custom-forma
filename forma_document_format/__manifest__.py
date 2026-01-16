@@ -7,6 +7,7 @@
     "depends": [
         "base",
         "account",
+        "account_payment_mode",
     ],
     "license": "AGPL-3",
     "application": True,
