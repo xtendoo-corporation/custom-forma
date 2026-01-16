@@ -16,29 +16,60 @@
                     Concepto de pago:
                     <span class="fw-bold" t-field="o.payment_reference"/>
 
-                    <t t-if="o.company_id.partner_id.bank_ids">
+                    <!-- Mostrar cuentas asociadas al modo de pago (fixed o variable) -->
+                    <t t-if="o.payment_mode_id">
                         <br/>
-                        <div class="d-flex">
-                            <span class="me-2" style="white-space: nowrap;">En esta Cuenta(s):</span>
-
-                            <div>
-                                <t t-foreach="o.company_id.partner_id.bank_ids" t-as="bank">
-                                    <div class="fw-bold">
-                                        <t t-esc="bank.acc_number"/>
-                                        -
-                                        <t t-esc="bank.bank_id.name"/>
-                                    </div>
+                        <div>
+                            <strong>Cuenta(s)</strong>
+                            <t t-if="o.payment_mode_id.bank_account_link == 'fixed' and o.payment_mode_id.fixed_journal_id.bank_account_id">
+                                <div class="fw-bold">
+                                    <t t-esc="o.payment_mode_id.fixed_journal_id.bank_account_id.acc_number"/>
+                                     -
+                                    <t t-esc="o.payment_mode_id.fixed_journal_id.bank_account_id.bank_id.name"/>
+                                </div>
+                            </t>
+                            <t t-elif="o.payment_mode_id.bank_account_link != 'fixed'">
+                                <t t-foreach="o.payment_mode_id.variable_journal_ids" t-as="vj">
+                                    <t t-if="vj.bank_account_id">
+                                        <div class="fw-bold">
+                                            <t t-esc="vj.bank_account_id.acc_number"/>
+                                             -
+                                            <t t-esc="vj.bank_account_id.bank_id.name"/>
+                                        </div>
+                                    </t>
                                 </t>
-                            </div>
+                            </t>
                         </div>
                     </t>
 
-                    <t t-else="">
-                        <t t-if="o.partner_bank_id">
+                    <!-- Si no hay cuentas por forma de pago, se muestra la cuenta de la compañia -->
+                    <t t-if="not o.payment_mode_id or not (o.payment_mode_id.bank_account_link == 'fixed' and o.payment_mode_id.fixed_journal_id.bank_account_id) and not (o.payment_mode_id and o.payment_mode_id.variable_journal_ids)">
+
+                        <t t-if="o.company_id.partner_id.bank_ids">
                             <br/>
-                            En esta cuenta:
-                            <span t-field="o.partner_bank_id" class="fw-bold"/>
+                            <div class="d-flex">
+                                <span class="me-2" style="white-space: nowrap;">En esta Cuenta(s):</span>
+
+                                <div>
+                                    <t t-foreach="o.company_id.partner_id.bank_ids" t-as="bank">
+                                        <div class="fw-bold">
+                                            <t t-esc="bank.acc_number"/>
+                                            -
+                                            <t t-esc="bank.bank_id.name"/>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
                         </t>
+
+                        <t t-else="">
+                            <t t-if="o.partner_bank_id">
+                                <br/>
+                                En esta cuenta:
+                                <span t-field="o.partner_bank_id" class="fw-bold"/>
+                            </t>
+                        </t>
+
                     </t>
                 </p>
             </xpath>
