@@ -16,7 +16,6 @@
         """,
     "data": [
         "views/invoice/invoice_document.xml",
-        "views/layout/layout_inherit.xml",
     ],
 
     "installable": True,
