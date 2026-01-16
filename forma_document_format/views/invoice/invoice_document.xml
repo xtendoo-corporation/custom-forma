@@ -3,8 +3,42 @@
     <data>
         <template id="report_invoice_document_inherit" inherit_id="account.report_invoice_document">
 
-            <xpath expr="//div[@name='due_date']" position="replace">
+            <!-- Eliminar el bloque de address original -->
+            <xpath expr="//address[@t-field='o.partner_id']" position="replace">
+            </xpath>
 
+            <!-- Eliminar el bloque del VAT/NIF -->
+            <xpath expr="//div[@id='partner_vat_no_shipping']" position="replace">
+            </xpath>
+
+            <xpath expr="//div[@id='partner_vat_address_same_as_shipping']" position="replace">
+            </xpath>
+
+            <xpath expr="//div[@id='partner_vat_address_not_same_as_shipping']" position="replace">
+            </xpath>
+
+            <xpath
+                expr="//div[contains(@class, 'offset-col-6') or contains(@class, 'col-6')][@name='no_shipping' or @name='address_same_as_shipping' or @name='address_not_same_as_shipping']"
+                position="replace">
+                <div class="col-6 text-start" name="customer_address_left"
+                     style="padding-left: 0 !important; margin-left: -425px !important;">
+                    <address class="mb-0" t-field="o.partner_id"
+                             t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                    <div t-if="o.partner_id.vat">
+                        <t t-if="o.company_id.account_fiscal_country_id.vat_label"
+                           t-out="o.company_id.account_fiscal_country_id.vat_label"/>
+                        <t t-else="">Tax ID</t>:
+                        <span t-field="o.partner_id.vat"/>
+                    </div>
+                    <div t-if="o.partner_id.country_code == 'MA' and o.partner_id.company_registry">
+                        ICE:
+                        <a t-field="o.partner_id.company_registry"/>
+                    </div>
+                </div>
+            </xpath>
+
+            <!-- Reemplazar el campo de fecha de vencimiento -->
+            <xpath expr="//div[@name='due_date']" position="replace">
                 <div class="col" t-if="o.partner_shipping_id and o.partner_shipping_id.street" name="shipping_ref">
                     <strong>Referencia</strong>
                     <div t-field="o.partner_shipping_id.street"/>
@@ -14,65 +48,14 @@
                     <strong>Forma de pago</strong>
                     <div t-field="o.payment_mode_id"/>
                 </div>
-
             </xpath>
 
+            <!-- Reemplazar el concepto de pago -->
             <xpath expr="//p[@name='payment_communication']" position="replace">
-                <p name="payment_communication">
+                <p name="payment_communication" class="mt-3">
+                    <t t-if="o.partner_bank_id"></t>
                     Concepto de pago:
                     <span class="fw-bold" t-field="o.payment_reference"/>
-
-                    <!-- Mostrar cuentas asociadas al modo de pago (fixed o variable) -->
-                    <t t-if="o.payment_mode_id">
-                        <div>
-                            <strong>Cuenta(s)</strong>
-                            <t t-if="o.payment_mode_id.bank_account_link == 'fixed' and o.payment_mode_id.fixed_journal_id.bank_account_id">
-                                <div class="fw-bold">
-                                    <t t-esc="o.payment_mode_id.fixed_journal_id.bank_account_id.acc_number"/>
-                                    -
-                                    <t t-esc="o.payment_mode_id.fixed_journal_id.bank_account_id.bank_id.name"/>
-                                </div>
-                            </t>
-                            <t t-elif="o.payment_mode_id.bank_account_link != 'fixed'">
-                                <t t-foreach="o.payment_mode_id.variable_journal_ids" t-as="vj">
-                                    <t t-if="vj.bank_account_id">
-                                        <div class="fw-bold">
-                                            <t t-esc="vj.bank_account_id.acc_number"/>
-                                            -
-                                            <t t-esc="vj.bank_account_id.bank_id.name"/>
-                                        </div>
-                                    </t>
-                                </t>
-                            </t>
-                        </div>
-                    </t>
-
-                    <t t-if="not o.payment_mode_id or not (o.payment_mode_id.bank_account_link == 'fixed' and o.payment_mode_id.fixed_journal_id.bank_account_id) and not (o.payment_mode_id and o.payment_mode_id.variable_journal_ids)">
-
-                        <t t-if="o.company_id.partner_id.bank_ids">
-                            <div class="d-flex">
-                                <span class="me-2" style="white-space: nowrap;">En esta Cuenta(s):</span>
-
-                                <div>
-                                    <t t-foreach="o.company_id.partner_id.bank_ids" t-as="bank">
-                                        <div class="fw-bold">
-                                            <t t-esc="bank.acc_number"/>
-                                            -
-                                            <t t-esc="bank.bank_id.name"/>
-                                        </div>
-                                    </t>
-                                </div>
-                            </div>
-                        </t>
-
-                        <t t-else="">
-                            <t t-if="o.partner_bank_id">
-                                En esta cuenta:
-                                <span t-field="o.partner_bank_id" class="fw-bold"/>
-                            </t>
-                        </t>
-
-                    </t>
                 </p>
             </xpath>
 
