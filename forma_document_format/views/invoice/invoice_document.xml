@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!-- Hereda la plantilla base de factura de Odoo 19 y añade un pequeño bloque identificador -->
         <template id="report_invoice_document_inherit" inherit_id="account.report_invoice_document">
 
             <xpath expr="//div[@name='due_date']" position="replace">
+
+                <div class="col" t-if="o.partner_shipping_id and o.partner_shipping_id.street" name="shipping_ref">
+                    <strong>Referencia</strong>
+                    <div t-field="o.partner_shipping_id.street"/>
+                </div>
+
                 <div class="col" name="payment_method" t-if="o.payment_mode_id">
                     <strong>Forma de pago</strong>
                     <div t-field="o.payment_mode_id"/>
                 </div>
+
             </xpath>
 
             <xpath expr="//p[@name='payment_communication']" position="replace">
@@ -18,13 +24,12 @@
 
                     <!-- Mostrar cuentas asociadas al modo de pago (fixed o variable) -->
                     <t t-if="o.payment_mode_id">
-                        <br/>
                         <div>
                             <strong>Cuenta(s)</strong>
                             <t t-if="o.payment_mode_id.bank_account_link == 'fixed' and o.payment_mode_id.fixed_journal_id.bank_account_id">
                                 <div class="fw-bold">
                                     <t t-esc="o.payment_mode_id.fixed_journal_id.bank_account_id.acc_number"/>
-                                     -
+                                    -
                                     <t t-esc="o.payment_mode_id.fixed_journal_id.bank_account_id.bank_id.name"/>
                                 </div>
                             </t>
@@ -33,7 +38,7 @@
                                     <t t-if="vj.bank_account_id">
                                         <div class="fw-bold">
                                             <t t-esc="vj.bank_account_id.acc_number"/>
-                                             -
+                                            -
                                             <t t-esc="vj.bank_account_id.bank_id.name"/>
                                         </div>
                                     </t>
@@ -42,11 +47,9 @@
                         </div>
                     </t>
 
-                    <!-- Si no hay cuentas por forma de pago, se muestra la cuenta de la compañia -->
                     <t t-if="not o.payment_mode_id or not (o.payment_mode_id.bank_account_link == 'fixed' and o.payment_mode_id.fixed_journal_id.bank_account_id) and not (o.payment_mode_id and o.payment_mode_id.variable_journal_ids)">
 
                         <t t-if="o.company_id.partner_id.bank_ids">
-                            <br/>
                             <div class="d-flex">
                                 <span class="me-2" style="white-space: nowrap;">En esta Cuenta(s):</span>
 
@@ -64,7 +67,6 @@
 
                         <t t-else="">
                             <t t-if="o.partner_bank_id">
-                                <br/>
                                 En esta cuenta:
                                 <span t-field="o.partner_bank_id" class="fw-bold"/>
                             </t>
