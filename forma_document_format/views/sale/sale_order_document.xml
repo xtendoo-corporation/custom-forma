@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_saleorder_document_inherit" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//div[@id='informations']//div[div[@t-field='doc.user_id']]" position="replace">
+            <div t-if="doc.client_order_ref" class="col" name="informations_reference">
+                <strong>Referencia</strong>
+                <div t-field="doc.client_order_ref">SO0000</div>
+            </div>
+        </xpath>
+        <xpath expr="//div[@name='informations_reference']" position="replace">
+        </xpath>
+    </template>
+</odoo>
