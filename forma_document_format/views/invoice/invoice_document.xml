@@ -39,10 +39,6 @@
 
             <!-- Reemplazar el campo de fecha de vencimiento -->
             <xpath expr="//div[@name='due_date']" position="replace">
-                <div class="col" t-if="o.partner_shipping_id and o.partner_shipping_id.street" name="shipping_ref">
-                    <strong>Referencia</strong>
-                    <div t-field="o.partner_shipping_id.street"/>
-                </div>
 
                 <div class="col" name="payment_method" t-if="o.payment_mode_id">
                     <strong>Forma de pago</strong>
