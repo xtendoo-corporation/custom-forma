@@ -3,55 +3,45 @@
     <data>
         <template id="report_invoice_document_inherit" inherit_id="account.report_invoice_document">
 
-            <!-- Eliminar el bloque de address original -->
-            <xpath expr="//address[@t-field='o.partner_id']" position="replace">
-            </xpath>
-
-            <!-- Eliminar el bloque del VAT/NIF -->
-            <xpath expr="//div[@id='partner_vat_no_shipping']" position="replace">
-            </xpath>
-
-            <xpath expr="//div[@id='partner_vat_address_same_as_shipping']" position="replace">
-            </xpath>
-
-            <xpath expr="//div[@id='partner_vat_address_not_same_as_shipping']" position="replace">
-            </xpath>
-
-            <xpath
-                expr="//div[contains(@class, 'offset-col-6') or contains(@class, 'col-6')][@name='no_shipping' or @name='address_same_as_shipping' or @name='address_not_same_as_shipping']"
+            <!--
+            Strategy: Replace the entire "Address Logic Row" with a single fixed layout.
+            This removes the "Shipping Address" column and forces the "Invoice Address"
+            to be a simple 'col-6' on the left side.
+            -->
+            <xpath expr="//div[@class='row'][.//div[@name='address_not_same_as_shipping']]"
                 position="replace">
-                <div class="col-6 text-start" name="customer_address_left"
-                     style="padding-left: 0 !important; margin-left: -425px !important;">
-                    <address class="mb-0" t-field="o.partner_id"
-                             t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
-                    <div t-if="o.partner_id.vat">
-                        <t t-if="o.company_id.account_fiscal_country_id.vat_label"
-                           t-out="o.company_id.account_fiscal_country_id.vat_label"/>
-                        <t t-else="">Tax ID</t>:
-                        <span t-field="o.partner_id.vat"/>
-                    </div>
-                    <div t-if="o.partner_id.country_code == 'MA' and o.partner_id.company_registry">
-                        ICE:
-                        <a t-field="o.partner_id.company_registry"/>
+                <div class="row">
+                    <div class="col-6" name="customer_address_left">
+                        <address class="mb-0" t-field="o.partner_id"
+                            t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+                        <div t-if="o.partner_id.commercial_partner_id.vat">
+                            <t t-if="o.company_id.account_fiscal_country_id.vat_label"
+                                t-out="o.company_id.account_fiscal_country_id.vat_label" />
+                            <t
+                                t-else="">Tax ID</t>: <span
+                                t-field="o.partner_id.commercial_partner_id.vat" />
+                        </div>
+                        <div
+                            t-if="o.partner_id.country_code == 'MA' and o.partner_id.company_registry">
+                            ICE: <a t-field="o.partner_id.company_registry" />
+                        </div>
                     </div>
                 </div>
             </xpath>
 
             <!-- Reemplazar el campo de fecha de vencimiento -->
             <xpath expr="//div[@name='due_date']" position="replace">
-
                 <div class="col" name="payment_method" t-if="o.payment_mode_id">
                     <strong>Forma de pago</strong>
-                    <div t-field="o.payment_mode_id"/>
+                    <div t-field="o.payment_mode_id" />
                 </div>
             </xpath>
 
             <!-- Reemplazar el concepto de pago -->
             <xpath expr="//p[@name='payment_communication']" position="replace">
                 <p name="payment_communication" class="mt-3">
-                    <t t-if="o.partner_bank_id"></t>
-                    Concepto de pago:
-                    <span class="fw-bold" t-field="o.payment_reference"/>
+                    <t t-if="o.partner_bank_id"></t> Concepto de pago: <span class="fw-bold"
+                        t-field="o.payment_reference" />
                 </p>
             </xpath>
 
