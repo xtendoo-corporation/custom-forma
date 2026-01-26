@@ -53,6 +53,17 @@
                 </p>
             </xpath>
 
+            <!-- Reemplazar Origen por Albarán -->
+            <!-- Añadir Albarán después de Origen -->
+            <xpath expr="//div[@name='origin']" position="after">
+                <div class="col" name="albaran">
+                    <strong>Albarán</strong>
+                    <t t-set="origin_pickings"
+                        t-value="o.invoice_line_ids.mapped('sale_line_ids.order_id.picking_ids').filtered(lambda p: p.state != 'cancel')" />
+                    <div t-esc="', '.join(origin_pickings.mapped('name'))" />
+                </div>
+            </xpath>
+
         </template>
     </data>
 </odoo>
