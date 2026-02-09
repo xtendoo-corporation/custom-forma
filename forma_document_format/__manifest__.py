@@ -1,7 +1,7 @@
 {
     "name": "Forma Document Format",
     "category": "Report",
-    "version": "19.0.1.0.6",
+    "version": "19.0.1.0.7",
     "author": "Guillermo Bárcena López",
     "website": "https://www.xtendoo.es",
     "depends": [
@@ -18,6 +18,7 @@
     "data": [
         "views/invoice/invoice_document.xml",
         "views/sale/sale_order_document.xml",
+        "views/sale/sale_order_document_no_totals.xml",
         "views/picking/report_deliveryslip.xml",
     ],
     "installable": True,
