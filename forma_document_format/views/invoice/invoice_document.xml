@@ -43,14 +43,29 @@
                     <strong>Forma de pago</strong>
                     <div t-field="o.payment_mode_id" />
                 </div>
+                <div class="col" name="partner_bank" t-if="o.partner_bank_id">
+                    <strong>Banco destinatario</strong>
+                    <div t-field="o.partner_bank_id.bank_name" />
+                </div>
             </xpath>
 
             <!-- Reemplazar el concepto de pago -->
             <xpath expr="//p[@name='payment_communication']" position="replace">
-                <p name="payment_communication" class="mt-3">
-                    <t t-if="o.partner_bank_id"></t> Concepto de pago: <span class="fw-bold"
-                        t-field="o.payment_reference" />
-                </p>
+                <div name="payment_communication" class="mt-3">
+                    <!-- Banco destinatario -->
+                    <div t-if="o.partner_bank_id" class="mb-2">
+                        <strong>Banco destinatario:</strong>
+                        <span t-field="o.partner_bank_id.bank_name" />
+                        <br/>
+                        <strong>Cuenta:</strong>
+                        <span t-field="o.partner_bank_id.acc_number" />
+                    </div>
+                    <!-- Concepto de pago -->
+                    <div t-if="o.payment_reference">
+                        <strong>Concepto de pago:</strong>
+                        <span class="fw-bold" t-field="o.payment_reference" />
+                    </div>
+                </div>
             </xpath>
 
             <!-- Reemplazar Origen por Albarán -->
