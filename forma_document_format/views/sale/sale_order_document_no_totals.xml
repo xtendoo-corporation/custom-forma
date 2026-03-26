@@ -5,7 +5,32 @@
         <template id="report_saleorder_document_no_totals" inherit_id="sale.report_saleorder_document">
             <!-- Ocultar la sección completa de totales -->
             <xpath expr="//div[@name='so_total_summary']" position="replace">
-                <!-- Sección de totales removida completamente -->
+                <div class="clearfix" name="so_total_summary">
+                    <div id="total" class="row mt-n3" name="total">
+                        <div t-attf-class="#{{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'}} ms-auto">
+                            <table class="o_total_table table table-borderless">
+                                <tr>
+                                    <td>Importe base</td>
+                                    <td class="text-end">
+                                        <span t-field="doc.amount_untaxed"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>IVA</td>
+                                    <td class="text-end">
+                                        <span t-field="doc.amount_tax"/>
+                                    </td>
+                                </tr>
+                                <tr class="o_total">
+                                    <td><strong>Total</strong></td>
+                                    <td class="text-end">
+                                        <strong><span t-field="doc.amount_total"/></strong>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </xpath>
         </template>
 

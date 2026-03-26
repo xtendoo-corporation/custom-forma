@@ -3,6 +3,17 @@
     <data>
         <template id="report_invoice_document_inherit" inherit_id="account.report_invoice_document">
 
+            <xpath expr="//div[@class='clearfix invoice_main']" position="before">
+                <style>
+                    .invoice_main {
+                        clear: both;
+                    }
+                    .invoice_main .page.mb-4 h2 {
+                        margin-top: 4px !important;
+                    }
+                </style>
+            </xpath>
+
             <!--
             Strategy: Replace the entire "Address Logic Row" with a single fixed layout.
             This removes the "Shipping Address" column and forces the "Invoice Address"
@@ -39,44 +50,25 @@
 
             <!-- Reemplazar el campo de fecha de vencimiento -->
             <xpath expr="//div[@name='due_date']" position="replace">
-                <div class="col" name="payment_method" t-if="o.payment_mode_id">
-                    <strong>Forma de pago</strong>
-                    <div t-field="o.payment_mode_id" />
-                </div>
-                <div class="col" name="partner_bank" t-if="o.partner_bank_id">
-                    <strong>Banco destinatario</strong>
-                    <div t-field="o.partner_bank_id.bank_name" />
-                </div>
+                <div class="col" name="due_date"/>
             </xpath>
 
             <!-- Reemplazar el concepto de pago -->
             <xpath expr="//p[@name='payment_communication']" position="replace">
-                <div name="payment_communication" class="mt-3">
-                    <!-- Banco destinatario -->
-                    <div t-if="o.partner_bank_id" class="mb-2">
+                <p name="payment_communication" class="mt-3">
+                    <t t-if="o.partner_bank_id">
                         <strong>Banco destinatario:</strong>
                         <span t-field="o.partner_bank_id.bank_name" />
                         <br/>
                         <strong>Cuenta:</strong>
                         <span t-field="o.partner_bank_id.acc_number" />
-                    </div>
-                    <!-- Concepto de pago -->
-                    <div t-if="o.payment_reference">
+                        <br/>
+                    </t>
+                    <t t-if="o.payment_reference">
                         <strong>Concepto de pago:</strong>
                         <span class="fw-bold" t-field="o.payment_reference" />
-                    </div>
-                </div>
-            </xpath>
-
-            <!-- Reemplazar Origen por Albarán -->
-            <!-- Añadir Albarán después de Origen -->
-            <xpath expr="//div[@name='origin']" position="after">
-                <div class="col" name="albaran">
-                    <strong>Albarán</strong>
-                    <t t-set="origin_pickings"
-                        t-value="o.invoice_line_ids.mapped('sale_line_ids.order_id.picking_ids').filtered(lambda p: p.state != 'cancel')" />
-                    <div t-esc="', '.join(origin_pickings.mapped('name'))" />
-                </div>
+                    </t>
+                </p>
             </xpath>
 
         </template>
