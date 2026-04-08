@@ -2,10 +2,33 @@
 <odoo>
     <template id="report_delivery_document_inherit_forma"
         inherit_id="stock.report_delivery_document">
+        <xpath expr="//h2" position="attributes">
+            <attribute name="style">margin-bottom: 14px; color: #0b5394;</attribute>
+        </xpath>
+
+        <xpath expr="//div[@name='outgoing_delivery_address']" position="attributes">
+            <attribute name="style">margin-bottom: 10px;</attribute>
+        </xpath>
+
+        <xpath expr="//table[@name='stock_move_table']" position="attributes">
+            <attribute name="style">margin-top: 10px; width: 100%;</attribute>
+        </xpath>
+
+        <xpath expr="//table[@name='stock_move_line_table']" position="attributes">
+            <attribute name="style">margin-top: 10px; width: 100%;</attribute>
+        </xpath>
+
         <xpath expr="//h2/span[2]" position="replace">
         </xpath>
 
         <xpath expr="//div[@name='outgoing_delivery_address']/strong" position="replace">
+        </xpath>
+
+        <xpath expr="//div[@name='outgoing_delivery_address']" position="inside">
+            <div t-if="o.partner_id.commercial_partner_id.vat">
+                <strong>NIF:</strong>
+                <span t-field="o.partner_id.commercial_partner_id.vat"/>
+            </div>
         </xpath>
 
         <xpath expr="//div[@name='div_sched_date']/div[@t-if=&quot;o.state == 'done'&quot;]"
